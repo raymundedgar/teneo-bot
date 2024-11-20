@@ -1,4 +1,4 @@
-# ᝰ.ᐟ TENEO-NODE
+# TENEO-NODE
 
 Running Teneo Node BETA, CLI Version. <br>
 Teneo Is an Browser extension Node Based. <br>
@@ -33,7 +33,7 @@ but `I think` there is no reason to ban the account, because this is not cheatin
 
 ![alt text](image-1.png)
 
-## ✎ᝰ. RUNNING 
+## RUNNING (CLI Version)
 - Clone Repository
 ```bash
 git clone https://github.com/Zlkcyber/teneo-farm.git
@@ -46,4 +46,27 @@ npm install
 - Run the script
 ```bash
 node main.js
+```
+
+## RUNNING (Extension Version)
+- Create a new browser tab and paste this
+```bash
+chrome-extension://emcclcoaglgcpoognfiggmhnhgabppkm/index.html
+```
+- Open developer console by clicking F12 or right click the page > Inspect element
+- Under 'Console' tab, paste this code
+```bash
+(function checkAndClickButton() {
+    const interval = 10000; // 10 seconds
+    const buttonClass = "bg-blue-teneo";
+    const targetText = "Connect Node";
+
+    setInterval(() => {
+        const button = document.querySelector(`.${buttonClass}`);
+        if (button && button.textContent.trim() === targetText) {
+            button.click();
+            console.log(`Clicked the button with text "${targetText}"`);
+        }
+    }, interval);
+})();
 ```
