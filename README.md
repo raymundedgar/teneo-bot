@@ -49,6 +49,8 @@ node main.js
 ```
 
 ## RUNNING (Extension Version)
+- Install [Teneo chrome extension](https://chromewebstore.google.com/detail/teneo-community-node/emcclcoaglgcpoognfiggmhnhgabppkm)
+- Use my referral code to get 2,500 points: 6M9Bz
 - Create a new browser tab and paste this
 ```bash
 chrome-extension://emcclcoaglgcpoognfiggmhnhgabppkm/index.html
