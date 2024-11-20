@@ -226,7 +226,7 @@ async function registerUser() {
           const response = await axios.post(signupUrl, {
             email: email,
             password: password,
-            data: { invited_by: "KGWku" },
+            data: { invited_by: "6M9Bz" },
             gotrue_meta_security: {},
             code_challenge: null,
             code_challenge_method: null
