@@ -212,6 +212,7 @@ async function registerUser() {
 
   rl.question('Enter your email: ', (email) => {
     rl.question('Enter your password: ', (password) => {
+      rl.question('Enter invited_by code: ', async (invitedBy) => {
         try {
           const isExist = await axios.post(isExistUrl, { email: email }, {
             headers: {
@@ -247,6 +248,7 @@ async function registerUser() {
         } finally {
           rl.close();
         }
+      });
     });
   });
 }
@@ -255,54 +257,63 @@ async function main() {
   const localStorageData = await getLocalStorage();
   let access_token = localStorageData.access_token;
 
-  let proxy = null;
+  rl.question('Do you want to use a proxy? (y/n): ', async (useProxy) => {
+    let proxy = null;
+    if (useProxy.toLowerCase() === 'y') {
+      proxy = await new Promise((resolve) => {
+        rl.question('Please enter your proxy URL (e.g., http://username:password@host:port): ', (inputProxy) => {
+          resolve(inputProxy);
+        });
+      });
+    }
 
-  if (!access_token) {
-    rl.question('User ID not found. Would you like to:\n1. Register an account\n2. Login to your account\n3. Enter Token manually\nChoose an option: ', async (option) => {
-      switch (option) {
-        case '1':
-          await registerUser();
-          break;
-        case '2':
-          await getUserId(proxy);
-          break;
-        case '3':
-          rl.question('Please enter your access token: ', async (accessToken) => {
-            userToken = accessToken;
-            await setLocalStorage({ userToken });
+    if (!access_token) {
+      rl.question('User ID not found. Would you like to:\n1. Register an account\n2. Login to your account\n3. Enter Token manually\nChoose an option: ', async (option) => {
+        switch (option) {
+          case '1':
+            await registerUser();
+            break;
+          case '2':
+            await getUserId(proxy);
+            break;
+          case '3':
+            rl.question('Please enter your access token: ', async (accessToken) => {
+              userToken = accessToken;
+              await setLocalStorage({ userToken });
+              await startCountdownAndPoints();
+              await connectWebSocket(userToken, proxy);
+              rl.close();
+            });
+            break;
+          default:
+            console.log('Invalid option. Exiting...');
+            process.exit(0);
+        }
+      });
+    } else {
+      rl.question('Menu:\n1. Logout\n2. Start Running Node\nChoose an option: ', async (option) => {
+        switch (option) {
+          case '1':
+            fs.unlink('localStorage.json', (err) => {
+              if (err) {
+                console.error('Error deleting localStorage.json:', err.message);
+              } else {
+                console.log('Logged out successfully.');
+                process.exit(0);
+              }
+            });
+            break;
+          case '2':
             await startCountdownAndPoints();
-            await connectWebSocket(userToken, proxy);
-            rl.close();
-          });
-          break;
-        default:
-          console.log('Invalid option. Exiting...');
-          process.exit(0);
-      }
-    });
-  } else {
-    rl.question('Menu:\n1. Logout\n2. Start Running Node\nChoose an option: ', async (option) => {
-      switch (option) {
-        case '1':
-          fs.unlink('localStorage.json', (err) => {
-            if (err) {
-              console.error('Error deleting localStorage.json:', err.message);
-            } else {
-              console.log('Logged out successfully.');
-              process.exit(0);
-            }
-          });
-          break;
-        case '2':
-          await startCountdownAndPoints();
-          await connectWebSocket(access_token, proxy);
-          break;
-        default:
-          console.log('Invalid option. Exiting...');
-          process.exit(0);
-      }
-    });
-  }
+            await connectWebSocket(access_token, proxy);
+            break;
+          default:
+            console.log('Invalid option. Exiting...');
+            process.exit(0);
+        }
+      });
+    }
+  });
 }
 //run
 main();
