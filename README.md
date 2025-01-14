@@ -37,7 +37,7 @@ but `I think` there is no reason to ban the account, because this is not cheatin
 - Clone Repository
 ```bash
 git clone https://github.com/raymundedgar/teneo-bot.git
-cd teneo-farm
+cd teneo-bot
 ```
 - Install Dependency
 ```bash
